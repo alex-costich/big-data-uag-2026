@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Demo M05 - Bucket S3 creado con IaC'
+
+Parameters:
+  NombreAlumno:
+    Type: String
+    Description: ""
+    Default: 'alumno01'
+
+Resources:
+  BucketDemoIaC:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'demo-m05-iac-${NombreAlumno}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+Outputs:
+  NombreBucket:
+    Description: 'Nombre del bucket creado'
+    Value: !Ref BucketDemoIaC
+  ARNBucket:
+    Description: 'ARN del bucket'
+    Value: !GetAtt BucketDemoIaC.Arn

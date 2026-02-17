@@ -31,16 +31,43 @@ Descargar de https://www.docker.com/products/docker-desktop
 
 ### 2. Verificar Docker
 
+**macOS/Linux/Windows:**
 ```bash
 docker --version
 docker compose version
 ```
 
+**Nota para Windows:** Si recibes un error de ejecución de scripts en PowerShell, ejecuta:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+Esto permite ejecutar scripts locales en PowerShell.
+
 ### 3. Iniciar el Cluster
 
+**macOS/Linux:**
 ```bash
 cd big-data-uag-2026
 ./infrastructure/scripts/start-cluster.sh spark
+```
+
+**Windows (PowerShell):**
+```powershell
+cd big-data-uag-2026
+.\infrastructure\scripts\start-cluster.ps1 spark
+```
+
+**Windows (Command Prompt):**
+```cmd
+cd big-data-uag-2026
+powershell -ExecutionPolicy Bypass -File .\infrastructure\scripts\start-cluster.ps1 spark
+```
+
+**Alternativa directa con Docker Compose (todas las plataformas):**
+```bash
+cd big-data-uag-2026
+cd infrastructure
+docker compose -f docker-compose.spark.yml up -d --build
 ```
 
 ### 4. Acceder a Jupyter
@@ -59,6 +86,7 @@ Abrir http://localhost:8888 en el navegador.
 
 ### "Puerto en uso"
 
+**macOS/Linux:**
 ```bash
 # Detener servicios existentes
 ./infrastructure/scripts/stop-cluster.sh
@@ -66,6 +94,22 @@ Abrir http://localhost:8888 en el navegador.
 # Verificar puertos
 lsof -i :8888
 lsof -i :8080
+```
+
+**Windows:**
+```powershell
+# Detener servicios existentes
+.\infrastructure\scripts\stop-cluster.ps1
+
+# Verificar puertos (PowerShell)
+netstat -ano | findstr :8888
+netstat -ano | findstr :8080
+```
+
+**Alternativa directa con Docker Compose:**
+```bash
+cd infrastructure
+docker compose -f docker-compose.spark.yml down
 ```
 
 ### "No hay memoria suficiente"
@@ -76,6 +120,7 @@ lsof -i :8080
 
 ### "Contenedor no inicia"
 
+**macOS/Linux:**
 ```bash
 # Ver logs
 docker compose -f infrastructure/docker-compose.spark.yml logs
@@ -83,6 +128,24 @@ docker compose -f infrastructure/docker-compose.spark.yml logs
 # Reiniciar
 ./infrastructure/scripts/stop-cluster.sh
 ./infrastructure/scripts/start-cluster.sh spark
+```
+
+**Windows:**
+```powershell
+# Ver logs
+docker compose -f infrastructure\docker-compose.spark.yml logs
+
+# Reiniciar
+.\infrastructure\scripts\stop-cluster.ps1
+.\infrastructure\scripts\start-cluster.ps1 spark
+```
+
+**Alternativa directa con Docker Compose:**
+```bash
+cd infrastructure
+docker compose -f docker-compose.spark.yml logs
+docker compose -f docker-compose.spark.yml down
+docker compose -f docker-compose.spark.yml up -d --build
 ```
 
 ## Siguiente Paso
